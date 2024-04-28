@@ -1,0 +1,107 @@
+/**
+* @author     Rachid Laasri http://LRachid.com <Ralaasri@gmail.com>
+* @codecanyon http://codecanyon.net/user/RachidLaasri?ref=RachidLaasri
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Prosto+One);
+@import url(font-awesome.css);
+
+*{
+	padding: 0px;
+	margin: 0px;
+}
+#slidebar-icon{
+    position: absolute;
+    top: 60px;
+    right : 250px;
+    width: 40px;
+    height: 40px;
+    border-radius: 0px 4px 4px 0px;
+    font-size: 32px;
+    text-align: center;
+    line-height: 43px;
+}
+
+#sidebar{
+	width: 250px;
+	height: 100%;
+	top: 0;
+	right : -250px;
+	padding: 50px 0 10px 0;
+	text-align: center;
+	position: fixed; 
+	transition:right 1s;
+	-webkit-transition:right 1s;
+	-moz-transition:right 1s;
+	-o-transition:right 1s;
+	-ms-transition:right 1s;
+}
+
+#sidebar:hover{
+	right :0px;
+}
+
+#sidebar ul{
+	list-style-type: none;
+}
+
+#sidebar #menu {
+	margin-top: 50px;
+}
+#sidebar #menu ul li{
+	font-family: 'Exo 2', sans-serif;
+	height: 40px;
+}
+
+.active,#sidebar #menu ul li:hover{
+	line-height: 37px;
+}
+
+#sidebar ul li a{
+	text-decoration: none;
+	line-height: 37px;
+}
+
+#social{
+    position:absolute;
+    bottom:70px;
+    left: 20px;
+}
+
+#social ul li{
+	display: inline;
+	margin-left:10px;
+}
+
+li i{
+	width: 25px;
+	height: 25px;
+	display: block;
+	border-radius: 50%;
+}
+
+.fa{
+	line-height: 25px;
+}
+.fa-facebook:hover{
+	background: #3F5C9A;
+	border: 2px solid #3F5C9A;
+}
+.fa-twitter:hover{
+	background: #54A4DE;
+	border: 2px solid #54A4DE;
+}
+.fa-instagram:hover{
+	background: #37678D;
+	border: 2px solid #37678D;
+}
+.fa-briefcase:hover{
+	background: #82B541;
+	border: 2px solid #82B541;
+}
+
+#copyright{
+	font-family: 'Exo 2', sans-serif;
+	font-size: 14px;
+	text-align: center;
+}

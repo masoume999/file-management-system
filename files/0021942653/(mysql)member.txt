@@ -1,0 +1,117 @@
+<?php
+
+session_start();
+
+$DATABASE_HOST = 'localhost';
+$DATABASE_USER = 'root';
+$DATABASE_PASS = 'mysql';
+$DATABASE_NAME = 'file_management';
+$con = mysqli_connect($DATABASE_HOST, $DATABASE_USER, $DATABASE_PASS, $DATABASE_NAME);
+if (mysqli_connect_errno()) {
+	exit('Failed to connect to MySQL: ' . mysqli_connect_error());
+}
+
+$username=$_SESSION['id'];
+
+
+if(isset($_POST['submit'])){
+	session_regenerate_id();
+	$_SESSION['id'] = $username;
+    $checkbox1 = $_POST['check_gdpr']; 
+
+    for($i=0; $i<count($checkbox1); $i++){ 
+        $stmt = $con->prepare('SELECT user_id,password,first_name,last_name,email,phone_number,address FROM temporary_users WHERE user_id = ?');
+        $stmt->bind_param('i', $checkbox1[$i]);
+        $stmt->execute();
+        $stmt->bind_result($user_id,$password,$first_name,$last_name,$email,$phone_number,$address);
+        $stmt->fetch();
+        $stmt->close();
+
+        $stmt = $con->prepare('DELETE FROM temporary_users WHERE user_id = ?');
+        $stmt->bind_param('i', $checkbox1[$i]);
+        $stmt->execute();
+        $stmt->close();
+
+        $stmt = $con->prepare("INSERT INTO users (user_id,password,first_name,last_name,email,phone_number,address) VALUES ('$user_id','$password','$first_name','$last_name','$email','$phone_number','$address')");
+        $stmt->execute();
+        $stmt->close();
+        mkdir('files/'.$checkbox1[$i], 0700);
+    }    
+    header('Location: adminHome.php');
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Membership Rrequests</title>
+		<link href="style6.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+	</head>
+	<body class="style1">
+		<nav class="navtop">
+			<div>
+				<h1>درخواست های عضویت</h1>
+				<a href="adminHome.php"><i class="fas fa-home"></i>صفحه اصلی</a>
+				<a href="logout.php"><i class="fas fa-sign-out-alt"></i>خروج</a>
+			</div>
+		</nav>
+        <form method="post">
+        <div class="container">
+        <input type="submit" value="اعمال تغییرات" name="submit" formmethod="post">
+        </br>
+        </br>
+        </br>
+        </div>
+            </form>
+        <div class="table">
+                    <table id="Rrequests" class="table table-bordered table-striped m-2">
+                        <thead>
+                            <th>شماره</th>
+                            <th>شناسه کاربری</th>
+                            <th>نام</th>
+                            <th>نام خانوادگی</th>
+                            <th>جزئیات</th>
+                            <th>پذیرش</th>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $sql = "SELECT user_id,first_name, last_name FROM temporary_users";
+                        $results = $con->query($sql);
+                        
+                        $id = 1;
+                        if ($results->num_rows > 0) {
+                            while($row = $results->fetch_assoc()) {
+        
+                        ?>
+                            <tr>
+                                <td>
+                                    <?php echo htmlentities($id) ?>
+                                </td>
+                                <td>
+                                    <?php echo htmlentities($row["user_id"]) ?>
+                                </td>
+                                <td>
+                                    <?php echo htmlentities($row["first_name"]) ?>    
+                                </td>
+                                <td>
+                                    <?php echo htmlentities($row["last_name"]) ?> 
+                                </td>
+                                
+                                <td><a href="requestDetails.php?id=<?php echo htmlentities($row["user_id"]); ?>"><button i style='font-size:13px' class='fa fa-info-circle'></i></button></a></td>
+
+                                <td><input type="checkbox" name="check_gdpr[]" id="check_gdpr" formmethod="post" value=<?php echo htmlentities($row["user_id"]) ?>/></td> 
+
+                            </tr>
+                            <?php
+                            $id++;
+                        }
+                    }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+	</body>
+</html>
